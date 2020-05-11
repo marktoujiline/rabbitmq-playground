@@ -7,21 +7,25 @@ import com.rabbitmq.client.ConnectionFactory
 import com.rabbitmq.client.DeliverCallback
 
 object Consumer extends App {
-    val QUEUE_NAME = "hello";
-    val factory = new ConnectionFactory();
-    factory.setHost("localhost");
-    try {
-      val connection = factory.newConnection()
-      val channel = connection.createChannel()
-      channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+    // val EXCHANGE_NAME = "slicer"
+  
+    // val factory = new ConnectionFactory();
+    // factory.setHost("localhost");
+    // try {
+    //   val connection = factory.newConnection()
+    //   val channel = connection.createChannel()
 
-      val deliverCallback: DeliverCallback  = (consumerTag, delivery) => {
-        val message = new String(delivery.getBody(), "UTF-8");
-        println(" [x] Received '" + message + "'");
-      }
-      channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag => { });
+    //   channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+    //   val queueName = channel.queueDeclare().getQueue()
+    //   channel.queueBind(queueName, EXCHANGE_NAME, "");
 
-    } catch {
-      case NonFatal(ex) => println(ex)
-    }
+    //   val deliverCallback: DeliverCallback  = (consumerTag, delivery) => {
+    //     val message = new String(delivery.getBody(), "UTF-8");
+    //     println(" [x] Received '" + message + "'");
+    //   }
+    //   channel.basicConsume(queueName, false, deliverCallback, consumerTag => { });
+
+    // } catch {
+    //   case NonFatal(ex) => println(ex)
+    // }
 }
