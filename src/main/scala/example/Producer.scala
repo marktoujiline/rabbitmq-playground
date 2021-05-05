@@ -4,15 +4,6 @@ import com.rabbitmq.client.ConnectionFactory
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.Channel
 import scala.util.control.NonFatal
-import play.api.libs.json.Format
-import play.api.libs.json.Json
-
-case class Fact(name: String, value: String)
-
-object Fact {
-  // implicit val rw = WeePickle.macroFromTo[Fact]
-  implicit val format = Json.format[Fact]
-}
 
 object Producer extends App {
   val EXCHANGE_NAME = "slicer"
@@ -25,12 +16,10 @@ object Producer extends App {
     channel.exchangeDeclare(EXCHANGE_NAME, "fanout")
     channel.queueDeclare(QUEUE_NAME, false, false, false, null);
     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "")
-    // val message = "Hello World!";
-    val message = Fact("mark", "23")
-    val jsonMessage = Json.toJson(message).toString.getBytes()
+    val message = "\"Hello World!\"";
     while (true) {
       // channel.basicPublish(EXCHANGE_NAME, "", null, FromScala(message).transform(ToJson.bytes));
-      channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage)
+      channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes())
       println(" [x] Sent '" + message + "'");
       Thread.sleep(5000)
     }
